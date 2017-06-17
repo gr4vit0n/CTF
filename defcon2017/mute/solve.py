@@ -43,13 +43,13 @@ jne .loop
     proc.send_raw(sc)
 
     try:
-        proc.recvline(timeout=0.5)
+        proc.recvline(timeout=1)
     except:
         pass
     finally:
         proc.close()
         endtime = time.time() - starttime
-        if(endtime >= 0.5):
+        if(endtime >= 1):
             return True
         else:
             return False

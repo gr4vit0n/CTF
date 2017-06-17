@@ -1,6 +1,5 @@
 from pwn import *
 import string
-import sys
 import time
 
 def check(s, i):

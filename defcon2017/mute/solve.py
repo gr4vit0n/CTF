@@ -24,7 +24,7 @@ xor rcx, rcx
 mov rcx, [rsp + SECTION*8]
 shr rcx, SHIFT
 cmp cl, TESTCHAR
-jz .loop
+je .loop
 jmp .fin
 .loop:
 dec r8

